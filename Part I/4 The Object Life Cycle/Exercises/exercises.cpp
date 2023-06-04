@@ -1,41 +1,41 @@
-#include <chrono>
+#include <cstring>
 #include <thread>
 
 struct TimerClass {
     explicit TimerClass(const char* name) : timestamp {std::chrono::system_clock::now()} {
-        strcpy_s(this->name, name);
+        strcpy(this->name, name);
     }
 
     TimerClass(const TimerClass& other) : timestamp {other.timestamp} {
-        strcpy_s(name, other.name);
-        strcat_s(name, " copied");
+        strcpy(name, other.name);
+        strcat(name, " copied");
     }
 
     TimerClass(TimerClass&& other)  noexcept : timestamp {other.timestamp}{
         other.moved_from = true;
-        strcpy_s(name, other.name);
-        strcat_s(name, " moved");
+        strcpy(name, other.name);
+        strcat(name, " moved");
     }
 
     TimerClass& operator=(const TimerClass& other) {
         if (this == &other) return *this;
-        strcpy_s(name, other.name);
-        strcat_s(name, " copy-assigned");
+        strcpy(name, other.name);
+        strcat(name, " copy-assigned");
         timestamp = other.timestamp;
         return *this;
     }
     
     TimerClass& operator=(TimerClass&& other)  noexcept {
         if (this == &other) return *this;
-        strcpy_s(name, other.name);
-        strcat_s(name, " move-assigned");
+        strcpy(name, other.name);
+        strcat(name, " move-assigned");
         timestamp = other.timestamp;
         other.moved_from = true;
         return *this;
     }
 
     void setName(char* name) {
-        strcpy_s(this->name, name);
+        strcpy(this->name, name);
     }
 
     void printTimeDiff() {
@@ -66,8 +66,8 @@ void expensive_computation(TimerClass&& timer) {
 }
 
 int main() {
+    using namespace std::chrono_literals;
     auto timer1 = TimerClass("Timer 1");
-    std::this_thread::sleep_for(std::chrono::milliseconds(200));
     auto timer3 = TimerClass("Timer 3");
     auto timer2 {timer1};
     auto timer4 = TimerClass("Timer 4");
